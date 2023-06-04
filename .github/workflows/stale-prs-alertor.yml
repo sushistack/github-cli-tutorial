@@ -29,6 +29,6 @@ jobs:
           SLACK_CHANNEL: github-workflows
           SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK_URL }}
           GH_TOKEN: ${{ secrets.CUSTOM_GH_TOKEN }}
-        with:
-          status: '경고'
-          message: '생성된지 오래된 PR이 있습니다: ${{ steps.get_stale_prs.outputs.stdout }}'
+          SLACK_TITLE: 'Stale PR'
+          SLACK_MESSAGE: '생성된지 오래된 PR이 있습니다: ${{ steps.get_stale_prs.outputs.stdout }}'
+          SLACK_USERNAME: 'GITHUB'

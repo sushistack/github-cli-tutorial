@@ -14,18 +14,17 @@ jobs:
       - name: 리포지토리 체크아웃
         uses: actions/checkout@v2
 
-      - name: PR 정보 가져오기
-        run: echo "PR_NUMBER=$(echo $GITHUB_REF | cut -d / -f 3)" >> $GITHUB_ENV
-
       - name: PR 상태 확인 및 라벨 추가하기
         run: |
-          pr_number=$PR_NUMBER
-          pr_status=$(gh pr view $pr_number --json state --jq .state)
-          echo "PR 상태: $pr_status"
+          pr_numbers=$(gh pr list --json number --search "is:pr is:open -label:work-in-process" | jq -r '.[].number')
           label="work-in-process"
-          if [ "$pr_status" = "OPEN" ]; then
-            gh label view $label --repo ${{ github.repository }} 2>/dev/null || gh label create $label --repo ${{ github.repository }} --color FFA500 --description "This PR is a work in process"
-            gh pr edit $pr_number --add-label $label
-          fi
+          for pr_number in $pr_numbers; do
+            pr_status=$(gh pr view $pr_number --json state --jq .state)
+            echo "PR 상태: $pr_status"
+            if [ "$pr_status" = "OPEN" ]; then
+              gh label view $label --repo ${{ github.repository }} 2>/dev/null || gh label create $label --repo ${{ github.repository }} --color FFA500 --description "This PR is a work in process"
+              gh pr edit $pr_number --add-label $label
+            fi
+          done
         env:
           GH_TOKEN: ${{ secrets.CUSTOM_GH_TOKEN }}

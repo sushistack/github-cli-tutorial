@@ -28,4 +28,4 @@ jobs:
             gh pr edit $pr_number --add-label $label
           fi
         env:
-          GH_TOKEN: ${{ github.token }}
+          GH_TOKEN: ${{ secrets.CUSTOM_GH_TOKEN }}

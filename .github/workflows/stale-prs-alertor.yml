@@ -1,8 +1,11 @@
 name: PR 오래된 알림
 
-on:
-  schedule:
-    - cron: '0 0 * * *'  # 매일 자정마다 실행
+#on:
+#  schedule:
+#    - cron: '0 0 * * *'  # 매일 자정마다 실행
+
+on: [workflow_dispatch]
+  
 
 jobs:
   pr_stale_notification_job:

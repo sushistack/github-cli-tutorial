@@ -22,7 +22,7 @@ jobs:
         # gh pr list --state open --json number --jq ".[] | select(.updated_at < (now - 30*24*60*60)) | .number"
 
       - name: Slack 알림 전송
-        uses: rtCamp/action-slack-notify@v3.0.0
+        uses: rtCamp/action-slack-notify@v2
         env:
           SLACK_CHANNEL: github-workflows
           SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK_URL }}

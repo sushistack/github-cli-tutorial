@@ -22,7 +22,8 @@ jobs:
           pr_number=$PR_NUMBER
           pr_status=$(gh pr view $pr_number --json state --jq .state)
           echo "PR 상태: $pr_status"
-          if [ "$pr_status" = "\"open\"" ]; then
+          if [ "$pr_status" = "OPEN" ]; then
+            echo "add label!"
             gh pr label $pr_number --add "work-in-process"
           fi
         env:

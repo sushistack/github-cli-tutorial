@@ -1,0 +1,28 @@
+name: PR 오래된 알림
+
+on:
+  schedule:
+    - cron: '0 0 * * *'  # 매일 자정마다 실행
+
+jobs:
+  pr_stale_notification_job:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 리포지토리 체크아웃
+        uses: actions/checkout@v2
+
+      - name: 오래된_PR_가져오기
+        id: get_stale_prs
+        run: |
+          gh pr list --state open --json number --jq ".[] | .number"
+        # gh pr list --state open --json number --jq ".[] | select(.updated_at < (now - 30*24*60*60)) | .number"
+
+      - name: Slack 알림 전송
+        uses: rtCamp/action-slack-notify@v3.0.0
+        env:
+          SLACK_CHANNEL: github-workflows
+          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK_URL }}
+        with:
+          status: '경고'
+          message: '생성된지 오래된 PR이 있습니다: ${{ steps.get_stale_prs.outputs.stdout }}'

@@ -2,6 +2,7 @@ name: 자동 PR 라벨 추가
 
 on:
   pull_request:
+    brances: ['main']
     types:
       - opened
       - synchronize

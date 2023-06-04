@@ -1,0 +1,27 @@
+name: 자동 PR 라벨 추가
+
+on:
+  pull_request:
+    types:
+      - opened
+      - synchronize
+
+jobs:
+  pr_status_job:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 리포지토리 체크아웃
+        uses: actions/checkout@v2
+
+      - name: PR 정보 가져오기
+        run: echo "::set-env name=PR_NUMBER::$(echo $GITHUB_REF | cut -d / -f 3)"
+
+      - name: PR 상태 확인 및 라벨 추가하기
+        run: |
+          pr_number=$PR_NUMBER
+          pr_status=$(gh pr view $pr_number --json state --jq .state)
+          echo "PR 상태: $pr_status"
+          if [ "$pr_status" = "\"open\"" ]; then
+            gh pr label $pr_number --add "work-in-process"
+          fi

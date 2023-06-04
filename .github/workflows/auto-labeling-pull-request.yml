@@ -22,7 +22,7 @@ jobs:
             pr_status=$(gh pr view $pr_number --json state --jq .state)
             echo "PR 상태: $pr_status"
             if [ "$pr_status" = "OPEN" ]; then
-              gh label view $label --repo ${{ github.repository }} 2>/dev/null || gh label create $label --repo ${{ github.repository }} --color FFA500 --description "This PR is a work in process"
+              gh label list -S $label 2>/dev/null || gh label create $label --color FFA500 --description "This PR is a work in process"
               gh pr edit $pr_number --add-label $label
             fi
           done

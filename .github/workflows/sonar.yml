@@ -20,17 +20,17 @@ jobs:
           key: gh-extensions-${{ runner.os }}-${{ hashFiles('**/sonarqube.yaml') }}
 
       - name: 소나큐브 플러그인 설치
-        run: gh extension install sonarqube
+        run: gh extension install sonarqube/sonarqube
         env:
           GH_TOKEN: ${{ secrets.CUSTOM_GH_TOKEN }}
 
       - name: 소나큐브 토큰 생성
-        run: gh sonarqube create-token --name "SonarQube Token" > sonarqube_token.txt
+        run: gh secret set SONARQUBE_TOKEN -b"$(gh sonarqube create-token --name "SonarQube Token")"
         env:
           GH_TOKEN: ${{ secrets.CUSTOM_GH_TOKEN }}
 
       - name: 소나큐브 통합 분석
-        run: gh sonarqube analyze --linter --token "$(cat sonarqube_token.txt)"
+        run: gh sonarqube analyze --linter --token ${{ secrets.SONARQUBE_TOKEN }}
         env:
           GH_TOKEN: ${{ secrets.CUSTOM_GH_TOKEN }}
 

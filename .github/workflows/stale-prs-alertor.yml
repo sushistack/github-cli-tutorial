@@ -19,7 +19,7 @@ jobs:
         id: get_stale_prs
         run: |
           stale_prs=$(gh pr list --state open --json number --jq ".[] | .number")
-          echo $stale_prs
+          echo "::set-output name=stale_prs::$stale_prs"
         # gh pr list --state open --json number --jq ".[] | select(.updated_at < (now - 30*24*60*60)) | .number"
         env:
           GH_TOKEN: ${{ secrets.CUSTOM_GH_TOKEN }}
@@ -31,5 +31,5 @@ jobs:
           SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK_URL }}
           GH_TOKEN: ${{ secrets.CUSTOM_GH_TOKEN }}
           SLACK_TITLE: 'Stale PR'
-          SLACK_MESSAGE: '생성된지 오래된 PR이 있습니다: ${{ steps.get_stale_prs.outputs.stdout }}'
+          SLACK_MESSAGE: '생성된지 오래된 PR이 있습니다: ${{ steps.get_stale_prs.outputs.stale_prs }}'
           SLACK_USERNAME: 'GITHUB'

@@ -18,7 +18,8 @@ jobs:
       - name: 오래된_PR_가져오기
         id: get_stale_prs
         run: |
-          gh pr list --state open --json number --jq ".[] | .number"
+          stale_prs=$(gh pr list --state open --json number --jq ".[] | .number")
+          echo $stale_prs
         # gh pr list --state open --json number --jq ".[] | select(.updated_at < (now - 30*24*60*60)) | .number"
         env:
           GH_TOKEN: ${{ secrets.CUSTOM_GH_TOKEN }}

@@ -21,12 +21,20 @@ jobs:
 
       - name: 소나큐브 플러그인 설치
         run: gh extension install sonarqube
+        env:
+          GH_TOKEN: ${{ secrets.CUSTOM_GH_TOKEN }}
 
       - name: 소나큐브 토큰 생성
         run: gh sonarqube create-token --name "SonarQube Token" > sonarqube_token.txt
+        env:
+          GH_TOKEN: ${{ secrets.CUSTOM_GH_TOKEN }}
 
       - name: 소나큐브 통합 분석
         run: gh sonarqube analyze --linter --token "$(cat sonarqube_token.txt)"
+        env:
+          GH_TOKEN: ${{ secrets.CUSTOM_GH_TOKEN }}
 
       - name: 통합 결과 확인
         run: gh sonarqube check
+        env:
+          GH_TOKEN: ${{ secrets.CUSTOM_GH_TOKEN }}
